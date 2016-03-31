@@ -25,10 +25,10 @@ class LoginApiHandler @Inject()(authenticationController: AuthenticationControll
 
         val requestJson = request.parseJson.asJsObject
 
-        val userName = requestJson.getFields("username").head.asInstanceOf[JsString].value
+        val email = requestJson.getFields("email").head.asInstanceOf[JsString].value
         val password = requestJson.getFields("password").head.asInstanceOf[JsString].value
 
-        val authToken = authenticationController.login(userName, password)
+        val authToken = authenticationController.login(email, password)
 
         if (authToken != "") {
           exchange.getResponseHeaders.add(new HttpString("auth-token"), authToken)

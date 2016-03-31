@@ -12,9 +12,9 @@ import com.google.inject.Inject
 class NotificationController  @Inject()(sessionHandler: SessionHandler) {
 
 
-  def getBloodGroup(username: String): String = {
+  def getBloodGroup(userId:Long): String = {
 
-    val query = "SELECT blood_group from recipients where username= '" + username + "'"
+    val query = "SELECT blood_group from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -24,9 +24,9 @@ class NotificationController  @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getName(userName: String): String = {
+  def getName(userId:Long): String = {
 
-    val query = "SELECT patientName from recipients where username= '" + userName + "'"
+    val query = "SELECT patientName from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -36,9 +36,9 @@ class NotificationController  @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getHospitalName(userName: String): String = {
+  def getHospitalName(userId:Long): String = {
 
-    val query = "SELECT hospital_name from recipients where username= '" + userName + "'"
+    val query = "SELECT hospital_name from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -49,9 +49,9 @@ class NotificationController  @Inject()(sessionHandler: SessionHandler) {
   }
 
 
-  def getPhoneNo(userName: String): String = {
+  def getPhoneNo(userId:Long): String = {
 
-    val query = "SELECT phoneNo from recipients where username= '" + userName + "'"
+    val query = "SELECT phoneNo from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -61,9 +61,9 @@ class NotificationController  @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getLatitude(userName: String): String = {
+  def getLatitude(userId:Long): String = {
 
-    val query = "SELECT latitude from recipients where username= '" + userName + "'"
+    val query = "SELECT latitude from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -73,9 +73,9 @@ class NotificationController  @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getLongitude(userName: String): String = {
+  def getLongitude(userId:Long): String = {
 
-    val query = "SELECT longitude from recipients where username= '" + userName + "'"
+    val query = "SELECT longitude from recipients where recipientUserId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)

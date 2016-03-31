@@ -1,6 +1,6 @@
 package com.donoroncall.server.rest.undertow.handlers.authentication
 
-import com.donoroncall.server.rest.controllers.authentication.AuthenticationController
+import com.donoroncall.server.rest.controllers.authentication.{SessionHandler, AuthenticationController}
 import com.google.inject.Inject
 import io.undertow.server.{HttpHandler, HttpServerExchange}
 import org.apache.commons.io.IOUtils
@@ -9,7 +9,7 @@ import spray.json._
 /**
  * Created by Anmol on 10/3/16.
  */
-class ProcessCompletion @Inject()(authenticationController: AuthenticationController) extends HttpHandler {
+class ProcessCompletion @Inject()(authenticationController: AuthenticationController, sessionHandler: SessionHandler) extends HttpHandler {
   override def handleRequest(exchange: HttpServerExchange): Unit = {
     if (exchange.isInIoThread) {
       exchange.dispatch(this)
@@ -20,16 +20,20 @@ class ProcessCompletion @Inject()(authenticationController: AuthenticationContro
 
         val requestJson = request.parseJson.asJsObject
 
-        val username = requestJson.getFields("username").head.asInstanceOf[JsString].value
+        val authToken = requestJson.getFields("token").head.asInstanceOf[JsString].value
+
+        val userId = sessionHandler.getUserIdForSession(authToken)
+
         val donationStatus = requestJson.getFields("donationStatus").head.asInstanceOf[JsString].value
-        val donorUserName = requestJson.getFields("donorUserName").head.asInstanceOf[JsString].value
+        val donorName = requestJson.getFields("donorName").head.asInstanceOf[JsString].value
+        val donorEmail = requestJson.getFields("donorEmail").head.asInstanceOf[JsString].value
         val noOfUnits = requestJson.getFields("noOfUnits").head.asInstanceOf[JsString].value.toInt
         val date = requestJson.getFields("date").head.asInstanceOf[JsString].value
         val blood_group = requestJson.getFields("date").head.asInstanceOf[JsString].value
 
-        val userId = authenticationController.processComplete(username, donationStatus, donorUserName, noOfUnits, date, blood_group)
+        val userI = authenticationController.processComplete(userId, donationStatus, donorName, donorEmail, noOfUnits, date, blood_group)
 
-        if (userId) {
+        if (userI) {
 
           exchange.getResponseSender.send(JsObject(
             "status" -> JsString("Complete"),

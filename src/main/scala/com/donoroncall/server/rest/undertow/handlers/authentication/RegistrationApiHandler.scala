@@ -20,19 +20,19 @@ class RegistrationApiHandler @Inject()(authenticationController: AuthenticationC
 
         val requestJson = request.parseJson.asJsObject
 
-        val userName = requestJson.getFields("userName").head.asInstanceOf[JsString].value
-        val name = requestJson.getFields("password").head.asInstanceOf[JsString].value
+        val username = requestJson.getFields("username").head.asInstanceOf[JsString].value
+        val name = requestJson.getFields("name").head.asInstanceOf[JsString].value
         val dob = requestJson.getFields("email").head.asInstanceOf[JsString].value
-        val bloodGroup = requestJson.getFields("bloodGroup").head.asInstanceOf[JsString].value
+        val bloodGroup = requestJson.getFields("blood_group").head.asInstanceOf[JsString].value
         val password = requestJson.getFields("password").head.asInstanceOf[JsString].value
-        val confirmPassword = requestJson.getFields("confirmPassword").head.asInstanceOf[JsString].value
+
         val latitude = requestJson.getFields("latitude").head.asInstanceOf[JsString].value
         val longitude = requestJson.getFields("longitude").head.asInstanceOf[JsString].value
         val phoneNo = requestJson.getFields("phoneNo").head.asInstanceOf[JsString].value
         val email = requestJson.getFields("email").head.asInstanceOf[JsString].value
 
 
-        val userId = authenticationController.addNewUser(userName, password, name, bloodGroup, dob, confirmPassword, latitude, longitude, phoneNo, email)
+        val userId = authenticationController.addNewUser(email, password, name, bloodGroup, dob, latitude, longitude, phoneNo, username)
 
         if (userId) {
           //TODO add logic for Successful Registration

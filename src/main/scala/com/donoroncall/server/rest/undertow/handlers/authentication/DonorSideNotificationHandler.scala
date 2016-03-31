@@ -4,14 +4,14 @@ package com.donoroncall.server.rest.undertow.handlers.authentication
  * Created by anmol on 23/3/16.
  */
 
-import com.donoroncall.server.rest.controllers.authentication.NotificationController
+import com.donoroncall.server.rest.controllers.authentication.{SessionHandler, NotificationController}
 import com.google.inject.Inject
 import io.undertow.server.{HttpHandler, HttpServerExchange}
 import org.apache.commons.io.IOUtils
 import spray.json._
 
 
-class DonorSideNotificationHandler @Inject()(notificationController:NotificationController ) extends HttpHandler {
+class DonorSideNotificationHandler @Inject()(notificationController:NotificationController, sessionHandler: SessionHandler ) extends HttpHandler {
   override def handleRequest(exchange: HttpServerExchange): Unit = {
     if (exchange.isInIoThread) {
       exchange.dispatch(this)
@@ -23,21 +23,23 @@ class DonorSideNotificationHandler @Inject()(notificationController:Notification
 
         val requestJson = request.parseJson.asJsObject
 
-        val userName = requestJson.getFields("username").head.asInstanceOf[JsString].value
-        // Recipient username
 
 
-        val bloodGroup = notificationController.getBloodGroup(userName)
-        val patientName = notificationController.getName(userName)
-        val phoneNo = notificationController.getPhoneNo(userName)
-        val hospitalName = notificationController.getHospitalName(userName)
-        val latitude = notificationController.getLatitude(userName)
-        val longitude = notificationController.getLongitude(userName)
+        val userId = requestJson.getFields("token").head.asInstanceOf[JsString].value.toLong
+        // Recipient userId
+
+
+        val bloodGroup = notificationController.getBloodGroup(userId)
+        val patientName = notificationController.getName(userId)
+        val phoneNo = notificationController.getPhoneNo(userId)
+        val hospitalName = notificationController.getHospitalName(userId)
+        val latitude = notificationController.getLatitude(userId)
+        val longitude = notificationController.getLongitude(userId)
 
 
 
 
-        if (userName != null) {
+        if (userId != null) {
           // to verify if this is the correct way
           exchange.getResponseSender.send(JsObject(
             "status" -> JsString("ok"),

@@ -13,9 +13,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
 
 
 
-  def getBloodGroup(username: String): String = {
+  def getBloodGroup(userId: Long): String = {
 
-    val query = "SELECT blood_group from users where username='" + username + "'"
+    val query = "SELECT blood_group from users where userId ='" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -25,9 +25,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getName(userName: String): String = {
+  def getName(userId: Long): String = {
 
-    val query = "SELECT name from users where username= '" + userName + "'"
+    val query = "SELECT name from users where userId= '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -36,9 +36,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
      name
 
   }
-  def getDob(userName: String): String = {
+  def getDob(userId: Long): String = {
 
-    val query = "SELECT dob from users where username= '" + userName + "'"
+    val query = "SELECT dob from users where userId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -48,9 +48,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def getPhone(userName: String): String = {
+  def getPhone(userId: Long): String = {
 
-    val query = "SELECT phoneNo from users where username= '" + userName + "'"
+    val query = "SELECT phoneNo from users where userId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -62,9 +62,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
 
 
 
-  def getEmail(userName: String): String = {
+  def getEmail(userId: Long): String = {
 
-    val query = "SELECT email from users where username= '" + userName + "'"
+    val query = "SELECT email from users where userId = '" + userId + "'"
 
 
     val resultSet = mysqlClient.getResultSet(query)
@@ -74,9 +74,9 @@ class EditProfileController @Inject()(sessionHandler: SessionHandler) {
 
   }
 
-  def updateProfile(userName: String, name: String, bloodGroup: String, dob:String, phoneNo:String, email:String): Boolean = {
+  def updateProfile(userId: Long, name: String, bloodGroup: String, dob:String, phoneNo:String, email:String): Boolean = {
 
-    val query = "UPDATE users SET name = '"+ name +"', dob = '"+dob+"', bloodGroup = '"+bloodGroup +"', phoneNo = '"+phoneNo +"', email = '"+email+"'  WHERE username='" + userName + "'"
+    val query = "UPDATE users SET name = '"+ name +"', dob = '"+dob+"', bloodGroup = '"+bloodGroup +"', phoneNo = '"+phoneNo +"', email = '"+email+"'  WHERE userId ='" + userId + "'"
     val resultSet = mysqlClient.getResultSet(query)
     if(resultSet.next() )  true
     else  false

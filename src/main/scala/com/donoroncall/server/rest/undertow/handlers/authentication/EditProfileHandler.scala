@@ -1,6 +1,7 @@
 package com.donoroncall.server.rest.undertow.handlers.authentication
 
 import com.donoroncall.server.rest.controllers.authentication.EditProfileController
+import com.donoroncall.server.rest.controllers.authentication.SessionHandler
 import com.google.inject.Inject
 import io.undertow.server.{HttpHandler, HttpServerExchange}
 import org.apache.commons.io.IOUtils
@@ -9,7 +10,7 @@ import spray.json._
 /**
  * Created by anmol on 11/3/16.
  */
-class EditProfileHandler @Inject()(editProfileController:EditProfileController ) extends HttpHandler {
+class EditProfileHandler @Inject()(editProfileController:EditProfileController, sessionHandler: SessionHandler ) extends HttpHandler {
   override def handleRequest(exchange: HttpServerExchange): Unit = {
     if (exchange.isInIoThread) {
       exchange.dispatch(this)
@@ -20,24 +21,27 @@ class EditProfileHandler @Inject()(editProfileController:EditProfileController )
 
         val requestJson = request.parseJson.asJsObject
 
-        val userName = requestJson.getFields("username").head.asInstanceOf[JsString].value
+
+        val authToken = requestJson.getFields("token").head.asInstanceOf[JsString].value
+
+        val userId = sessionHandler.getUserIdForSession(authToken)
 
 
-        val bloodGroup = editProfileController.getBloodGroup(userName)
+        val bloodGroup = editProfileController.getBloodGroup(userId)
 
-        val dob = editProfileController.getDob(userName)
+        val dob = editProfileController.getDob(userId)
 
-        val name = editProfileController.getName(userName)
+        val name = editProfileController.getName(userId)
 
-        val email = editProfileController.getEmail(userName)
+        val email = editProfileController.getEmail(userId)
 
-         val phoneNo = editProfileController.getPhone(userName)
+         val phoneNo = editProfileController.getPhone(userId)
 
-        if (userName != null) {
+        if (userId != null) {
           // to verify if this is the correct way
           exchange.getResponseSender.send(JsObject(
             "status" -> JsString("ok"),
-            "username" -> JsString(userName),
+            "userId" -> JsNumber(userId),
             "bloodGroup" -> JsString(bloodGroup),
             "name" -> JsString(name),
             "dob" -> JsString(dob),

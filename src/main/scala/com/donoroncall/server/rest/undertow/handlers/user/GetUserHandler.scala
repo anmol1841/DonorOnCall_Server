@@ -2,9 +2,8 @@ package com.donoroncall.server.rest.undertow.handlers.user
 
 import com.donoroncall.server.rest.controllers.authentication.SessionHandler
 import com.google.inject.Inject
-import io.undertow.server.{HttpServerExchange, HttpHandler}
+import io.undertow.server.{HttpHandler, HttpServerExchange}
 import org.apache.commons.io.IOUtils
-import org.slf4j.{Logger, LoggerFactory}
 import spray.json._
 
 
@@ -28,6 +27,8 @@ class GetUserHandler @Inject()(sessionHandler: SessionHandler) extends HttpHandl
 
         // Get the authenticated User
         val user = sessionHandler.getUserForSession(authToken)
+        val userId = sessionHandler.getUserIdForSession(authToken)
+
 
         if (user != null) {
           // If the user is logged in

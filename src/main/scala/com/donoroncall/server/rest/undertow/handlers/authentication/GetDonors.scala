@@ -1,6 +1,6 @@
 package com.donoroncall.server.rest.undertow.handlers.authentication
 
-import com.donoroncall.server.rest.controllers.authentication.AuthenticationController
+import com.donoroncall.server.rest.controllers.authentication.{SessionHandler, AuthenticationController}
 import com.google.inject.Inject
 import io.undertow.server.{HttpHandler, HttpServerExchange}
 import org.apache.commons.io.IOUtils
@@ -8,7 +8,7 @@ import spray.json._
 /**
  * Created by Anmol on 28/3/16.
  */
-class GetDonors @Inject()(authenticationController: AuthenticationController) extends HttpHandler {
+class GetDonors @Inject()(authenticationController: AuthenticationController, sessionHandler: SessionHandler) extends HttpHandler {
   override def handleRequest(exchange: HttpServerExchange): Unit = {
     if (exchange.isInIoThread) {
       exchange.dispatch(this)
@@ -19,10 +19,12 @@ class GetDonors @Inject()(authenticationController: AuthenticationController) ex
 
         val requestJson = request.parseJson.asJsObject
 
-        val username = requestJson.getFields("username").head.asInstanceOf[JsString].value
+        val authToken = requestJson.getFields("token").head.asInstanceOf[JsString].value
+
+        val userId = sessionHandler.getUserIdForSession(authToken)
 
         //val z = authenticationController.getDonors(username).toArray
-        val z = authenticationController.getDonors(username).toArray.asInstanceOf[Array[String]].map(JsString(_))toVector
+        val z = authenticationController.getDonors(userId).toArray.asInstanceOf[Array[String]].map(JsString(_))toVector
 
 
 
