@@ -3,7 +3,6 @@ package com.donoroncall.server.rest.undertow.handlers.authentication
 /**
  * Created by anmol on 31/3/16.
  */
-
   import com.donoroncall.server.rest.controllers.authentication.{PatientDetailsController, SessionHandler}
   import com.google.inject.Inject
   import io.undertow.server.{HttpHandler, HttpServerExchange}
